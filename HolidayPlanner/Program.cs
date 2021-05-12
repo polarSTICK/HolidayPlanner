@@ -1,6 +1,7 @@
-﻿using System;
+﻿using HolidayPlanner.Helpers;
 using HolidayPlanner.Loggers;
 using HolidayPlanner.Serializers;
+using System;
 
 namespace HolidayPlanner
 {
@@ -8,33 +9,27 @@ namespace HolidayPlanner
     {
         private static ILogger _logger;
 
+        //TODO: make a retry available
         static void Main(string[] args)
         {
             _logger = new ConsoleLogger();
 
             _logger.Log("Initializing HolidayPlanner");
-
             var planner = new HolidayPlanner(new JsonHolidaySerializer(), _logger);
 
             _logger.Log("Enter planned start date:");
-
             var startDateString = Console.ReadLine();
 
-            while (!planner.IsDateValid(startDateString))
-            {
+            while (!PlannerHelper.IsDateValid(startDateString, _logger))
                 startDateString = Console.ReadLine();
-            }
 
             var startDateTime = DateTime.Parse(startDateString);
 
             _logger.Log("Enter planned end date:");
-
             var endDateString = Console.ReadLine();
 
-            while (!planner.IsDateValid(endDateString))
-            {
+            while (!PlannerHelper.IsDateValid(endDateString, _logger))
                 endDateString = Console.ReadLine();
-            }
 
             var endDateTime = DateTime.Parse(endDateString);
 
@@ -51,4 +46,3 @@ namespace HolidayPlanner
         }
     }
 }
-//TODO: make a retry available
